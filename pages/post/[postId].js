@@ -4,6 +4,7 @@ import clientPromise from "../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import { faHashtag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {getAppProps} from "../../utils/getAppProps";
 
 export default function Post(props) {
   console.log("PROPS", props);
@@ -45,6 +46,8 @@ Post.getLayout = function getLayout(page, pageProps) {
 export const getServerSideProps = withPageAuthRequired({
   async getServerSideProps(ctx) {
     const session = await getSession(ctx.req, ctx.res);
+    const props=  await getAppProps(ctx)
+    console.log('PROPSSSS:',props)
     const client = await clientPromise;
     const db = client.db("SmartBlogger");
     const post = await db.collection("posts").findOne({
@@ -67,6 +70,7 @@ export const getServerSideProps = withPageAuthRequired({
         title: post.title,
         metaDescription: post.metaDescription,
         keywords: post.keywords,
+        ...props
       },
     };
   },

@@ -2,9 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { Logo } from "../Logo/logo";
-export const AppLayout = ({ children }) => {
+export const AppLayout = ({ children ,posts,postId}) => {
   const { user } = useUser();
-  console.log("User:", user);
+  console.log("User:", posts);
+
   return (
     <div className="grid grid-cols-[300px_1fr] h-screen max-h-screen">
       <div className="flex flex-col text-white overflow-hidden">
@@ -17,8 +18,12 @@ export const AppLayout = ({ children }) => {
             New Post
           </Link>
         </div>
-        <div className="flex-1 overflow-auto bg-gradient-to-b from-gray-600 to-black">
-          List of posts
+        <div className="px-4 flex-1 overflow-auto bg-gradient-to-b from-gray-600 to-black  ">
+        {posts.map(post=>{
+        
+        
+          return <Link key={post._id} href={`/post/${post._id}`} className={` py-1 border border-white/0 block text-ellipsis overflow-hidden whitespace-nowrap my-1 px-2 bg-white/10 cursor-pointer rounded-sm ${postId === post._id ? "bg-white/20 border-white":""}`}>{post.topic}</Link>
+        })}
         </div>
         <div className="bg-black flex items-center gap-2 border-t border-white/50 h-20 px-2">
           {!!user ? (

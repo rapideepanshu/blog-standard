@@ -2,13 +2,20 @@ import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { AppLayout } from "../../components/AppLayout";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import {getAppProps} from "../../utils/getAppProps";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBrain } from "@fortawesome/free-solid-svg-icons";
 
 export default function NewPost(props) {
   const router = useRouter();
   const [topic, setTopic] = useState("");
   const [keywords, setKeywords] = useState("");
+  const [generating, setGenerating]= useState(false)
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try{
+      setGenerating(true)
     const response = await fetch("/api/generatePost", {
       method: "POST",
       headers: {
@@ -21,12 +28,25 @@ export default function NewPost(props) {
     console.log("JSON", json);
     if (json?.postId) {
       router.push(`/post/${json.postId}`);
+    }}
+    catch(e){
+      setGenerating(false)
     }
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <div className="h-full overflow-hidden ">
+      {!!generating &&(
+      <div className="text-black flex h-full animate-pulse w-full flex-col justify-center items-center">
+        <FontAwesomeIcon icon={faBrain} className="text-8xl" />
+        <h6>Loading ...</h6>
+      </div>
+      )}
+      {!generating &&(
+
+    
+      <div className="w-full h-full flex flex-col">
+      <form onSubmit={handleSubmit} className="m-auto w-full max-w-screen-sm bg-slate-200 rounded-md p-4 shadow-xl border border-slate-200 shadow-slate-200">
         <div>
           <label>
             <strong>Generate a blog post on the topic:</strong>
@@ -46,7 +66,9 @@ export default function NewPost(props) {
             value={keywords}
             onChange={(e) => setKeywords(e.target.value)}
           />
+          <small className="block mb-2">Separate keywords with a comma</small>
         </div>
+
         <button
           type="submit"
           className="bg-green-600 text-white tracking-wider w-full text-center cursor-pointer uppercase px-4 py-2 rounded-md hover:bg-green-700 transition-colors block"
@@ -54,6 +76,8 @@ export default function NewPost(props) {
           Generate
         </button>
       </form>
+      </div>
+        )}
     </div>
   );
 }
@@ -62,8 +86,11 @@ NewPost.getLayout = function getLayout(page, pageProps) {
   return <AppLayout {...pageProps}>{page}</AppLayout>;
 };
 
-export const getServerSideProps = withPageAuthRequired(() => {
-  return {
-    props: {},
-  };
+export const getServerSideProps = withPageAuthRequired( {
+async getServerSideProps(ctx){
+const props= await getAppProps(ctx)
+return{
+  props
+}
+}
 });

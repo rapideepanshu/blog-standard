@@ -4,16 +4,15 @@
 
 
 @layer base {
-    a:hover {
-      @apply underline;
-    }
+  
   
     h1,
     h2,
     h3,
     h4,
     h5,
-    h6 {
+    h6,
+    {
       @apply font-sans my-6 font-bold;
     }
   

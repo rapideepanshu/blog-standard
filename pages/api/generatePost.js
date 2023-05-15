@@ -47,7 +47,7 @@ export default withApiAuthRequired(async function handler(req, res) {
         role: "user",
         content: `Write a long and detailed SEO-friendly blog post about ${topic}, that targets the following comma-separated keywords: ${keywords}. 
       The response should be formatted in SEO-friendly HTML, 
-      limited only to the following HTML tags: p, h1, h2, h3, h4, h5, h6, strong, i, ul, li, ol.`,
+      limited  to the following HTML tags: p, h1, h2, h3, h4, h5, h6, strong, i, ul, li, ol.Do not use title HTML tag`,
       },
       {
         role: "assistant",
