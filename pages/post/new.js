@@ -25,7 +25,7 @@ export default function NewPost(props) {
     });
 
     const json = await response.json();
-    console.log("JSON", json);
+  
     if (json?.postId) {
       router.push(`/post/${json.postId}`);
     }}
@@ -55,6 +55,7 @@ export default function NewPost(props) {
             className="resize-none border border-slate-500 w-full block my-2 px-4 py-2 rounded-sm"
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
+            maxLength={80}
           />
         </div>
         <div>
@@ -65,14 +66,15 @@ export default function NewPost(props) {
             className="resize-none border border-slate-500 w-full block my-2 px-4 py-2 rounded-sm"
             value={keywords}
             onChange={(e) => setKeywords(e.target.value)}
+            maxLength={80}
           />
           <small className="block mb-2">Separate keywords with a comma</small>
         </div>
 
         <button
           type="submit"
-          className="bg-green-600 text-white tracking-wider w-full text-center cursor-pointer uppercase px-4 py-2 rounded-md hover:bg-green-700 transition-colors block"
-        >
+          className="bg-green-600 text-white tracking-wider w-full text-center cursor-pointer uppercase px-4 py-2 rounded-md hover:bg-green-700 transition-colors block disabled:bg-green-200 disabled:cursor-not-allowed"
+      disabled={!topic.trim() || !keywords.trim()}  >
           Generate
         </button>
       </form>
